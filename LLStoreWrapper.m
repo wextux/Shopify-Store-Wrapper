@@ -49,6 +49,38 @@ static NSString *returnFormat = @"json";
 	[request startAsynchronous];
 }
 
+
+-(void)getOrders {
+	NSString *returnType = @"orders";
+	
+	NSString *urlString = [NSString stringWithFormat:@"http://%@:%@@%@%@.%@", APIKey, password, baseURL, returnType, returnFormat];
+	
+	__block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:urlString]];
+	[request setTimeOutSeconds:30];
+	[request setStringEncoding:NSUTF8StringEncoding];
+	[request setNumberOfTimesToRetryOnTimeout:1];
+	[request setCompletionBlock:^{
+		NSError *error;
+		
+		if ([delegate respondsToSelector:@selector(storeWrapper:finishedGettingOrders:)]) {
+			[delegate storeWrapper:self finishedGettingOrders:
+			 [[[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error] objectForKey:returnType]];
+		}
+		
+	}];
+	[request setFailedBlock:^{
+		NSError *error;
+		
+		if ([delegate respondsToSelector:@selector(storeWrapper:failedGettingOrders:)]) {
+			[delegate storeWrapper:self failedGettingOrders:
+			 [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error]];
+		}
+		
+	}];
+	request_ = request;
+	[request startAsynchronous];
+}
+
 -(void)cancelRequest {
 	[request_ clearDelegatesAndCancel];
 }

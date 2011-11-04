@@ -12,8 +12,13 @@
 @class LLStoreWrapper;
 @protocol LLStoreDelegate <NSObject>
 
+// Products
 -(void)storeWrapper:(LLStoreWrapper *)storeWrapper finishedGettingProducts:(NSArray *)products;
 -(void)storeWrapper:(LLStoreWrapper *)storeWrapper failedGettingProducts:(NSDictionary *)failure;
+
+// Orders
+-(void)storeWrapper:(LLStoreWrapper *)storeWrapper finishedGettingOrders:(NSArray *)orders;
+-(void)storeWrapper:(LLStoreWrapper *)storeWrapper failedGettingOrders:(NSDictionary *)failure;
 
 @end
 
@@ -29,6 +34,8 @@
 
 
 -(void)getProducts;
+
+-(void)getOrders;
 
 -(void)cancelRequest;
 

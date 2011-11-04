@@ -7,7 +7,7 @@
 //
 
 #import "LLStoreWrapper.h"
-
+#import "CJSONDeserializer.h"
 
 @implementation LLStoreWrapper
 

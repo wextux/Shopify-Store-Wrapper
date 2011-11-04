@@ -20,6 +20,10 @@
 -(void)storeWrapper:(LLStoreWrapper *)storeWrapper finishedGettingOrders:(NSArray *)orders;
 -(void)storeWrapper:(LLStoreWrapper *)storeWrapper failedGettingOrders:(NSDictionary *)failure;
 
+// Cart
+-(void)storeWrapper:(LLStoreWrapper *)storeWrapper finishedAddingItemToCart:(NSString *)successMsg;
+-(void)storeWrapper:(LLStoreWrapper *)storeWrapper failedAddingItemToCart:(NSDictionary *)failure;
+
 @end
 
 
@@ -36,6 +40,8 @@
 -(void)getProducts;
 
 -(void)getOrders;
+
+-(void)addItemToCart:(NSString *)itemID;
 
 -(void)cancelRequest;
 

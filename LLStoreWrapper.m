@@ -18,7 +18,10 @@ static NSString *password = @"PASSWORD";
 static NSString *baseURL = @"YOURSTORENAME.myshopify.com/admin/";
 static NSString *returnFormat = @"json";
 
+
+#pragma mark - Actions
 -(void)getProducts {
+
 	NSString *returnType = @"products";
 	
 	NSString *urlString = [NSString stringWithFormat:@"http://%@:%@@%@%@.%@", APIKey, password, baseURL, returnType, returnFormat];
@@ -47,10 +50,12 @@ static NSString *returnFormat = @"json";
 	}];
 	request_ = request;
 	[request startAsynchronous];
+    
 }
 
 
 -(void)getOrders {
+
 	NSString *returnType = @"orders";
 	
 	NSString *urlString = [NSString stringWithFormat:@"http://%@:%@@%@%@.%@", APIKey, password, baseURL, returnType, returnFormat];
@@ -79,6 +84,42 @@ static NSString *returnFormat = @"json";
 	}];
 	request_ = request;
 	[request startAsynchronous];
+    
+}
+
+-(void)addItemToCart:(NSString *)itemID {
+
+    NSString *returnType = @"cart/add";
+    NSString *urlString = [NSString stringWithFormat:@"http://%@:%@@%@%@", APIKey, password, baseURL, returnType];
+    
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:urlString]];
+    [request setPostValue:itemID forKey:@"id"];
+	[request setTimeOutSeconds:30];
+	[request setStringEncoding:NSUTF8StringEncoding];
+	[request setNumberOfTimesToRetryOnTimeout:1];
+	[request setCompletionBlock:^{
+		NSError *error;
+		
+		if ([delegate respondsToSelector:@selector(storeWrapper:finishedAddingItemToCart:)]) {
+			[delegate storeWrapper:self finishedGettingOrders:
+			 [[[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error] objectForKey:returnType]];
+		}
+		
+	}];
+	[request setFailedBlock:^{
+		NSError *error;
+		
+		if ([delegate respondsToSelector:@selector(storeWrapper:failedAddingItemToCart:)]) {
+			[delegate storeWrapper:self failedGettingOrders:
+			 [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error]];
+		}
+		
+	}];
+    
+    request_ = request;
+	[request startAsynchronous];
+
 }
 
 -(void)cancelRequest {

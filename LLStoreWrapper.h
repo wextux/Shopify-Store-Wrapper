@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ASIFormDataRequest.h"
+#import "ASIHTTPRequest.h"
 
 @class LLStoreWrapper;
 @protocol LLStoreDelegate <NSObject>
@@ -30,7 +31,7 @@
 @interface LLStoreWrapper : NSObject {
 	id<LLStoreDelegate> delegate;
 
-	ASIFormDataRequest *request_;
+	ASIHTTPRequest *request_;
 	
 }
 

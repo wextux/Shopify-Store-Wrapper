@@ -25,15 +25,16 @@ static NSString *returnFormat = @"json";
 	NSString *returnType = @"products";
 	
 	NSString *urlString = [NSString stringWithFormat:@"http://%@:%@@%@%@.%@", APIKey, password, baseURL, returnType, returnFormat];
-	
-	__block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:urlString]];
+	NSLog(@"%@", urlString);
+	__block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlString]];
 	[request setTimeOutSeconds:30];
-	[request setStringEncoding:NSUTF8StringEncoding];
+	//[request setStringEncoding:NSUTF8StringEncoding];
 	[request setNumberOfTimesToRetryOnTimeout:1];
 	[request setCompletionBlock:^{
 		NSError *error;
 		
 		if ([delegate respondsToSelector:@selector(storeWrapper:finishedGettingProducts:)]) {
+            //NSLog(@"%@",[request responseString]);
 			[delegate storeWrapper:self finishedGettingProducts:
 			 [[[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error] objectForKey:returnType]];
 		}
